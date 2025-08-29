@@ -14,6 +14,7 @@ for k = 1:length(files)
     
     % Strip extension from name for folder
     [~, baseName, ~] = fileparts(files(k).name);
+    baseName = lower(regexprep(baseName, '[^a-zA-Z0-9]', '_')); % Make python import friendly
     fileOutDir = fullfile(outputDir, baseName);
     if ~exist(fileOutDir, 'dir')
         mkdir(fileOutDir);
@@ -48,9 +49,8 @@ end
 
 function writeCellOrDouble(var, filename)
     if iscell(var)
-        % Convert to table for nicer writing
-        T = cell2table(var(:));
-        writetable(T, filename);
+
+        writecell(var(:), filename);
     else
         error('Unsupported type for export: %s', class(var));
     end
